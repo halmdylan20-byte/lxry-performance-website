@@ -197,7 +197,7 @@ footer{background:transparent}footer .footer-top{border:0}
 .hero{display:flex;align-items:center;min-height:760px;padding-top:110px;padding-bottom:75px}
 .hero::before,.hero::after{content:none;animation:none}
 .hero-copy{width:48%;padding-bottom:0}
-.hero-copy .ctas{justify-content:center;margin-top:24px}
+.hero-copy .ctas{justify-content:center;width:max-content;max-width:100%;margin-top:24px;margin-left:var(--gold-cta-offset,0px)}
 @media(max-width:750px){.hero{align-items:flex-start;justify-content:center;min-height:680px;padding-top:130px;padding-bottom:90px}.hero-copy{width:100%}.hero-copy .ctas{margin-top:22px}}
 </style></head><body>
 <header class="topbar"><div class="shell navinner"><a class="brand" href="#home" aria-label="LXRY Performance"><img src="assets/logo.png" alt="LXRY Performance"></a><nav class="navlinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#science">Science</a><a href="#story">Story</a><a href="#shop">Shop</a></nav><div class="actions"><a class="iconbtn" style="display:grid;place-items:center;text-decoration:none" href="#shop" aria-label="Shop">♧</a><button class="iconbtn menu" id="menu" aria-label="Open menu" aria-expanded="false">☰</button></div></div></header><nav class="mobile-links" id="mobilelinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#science">Science</a><a href="#story">Story</a><a href="#shop">Shop</a></nav>
@@ -283,5 +283,14 @@ const menu=document.getElementById('menu'),mobile=document.getElementById('mobil
  const hero=video.closest('section.hero');
  if(hero&&'IntersectionObserver' in window)new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;update();}).observe(hero);
  update();
+})();
+</script><script id="lxry-gold-cta-alignment">
+// Follow the gold word when the unchanged headline wraps or fonts finish loading.
+(()=>{
+ const copy=document.querySelector('.hero-copy'),gold=copy.querySelector('h1 .gradient'),cta=copy.querySelector('.ctas');
+ function align(){const word=gold.getBoundingClientRect(),column=copy.getBoundingClientRect();const left=word.left-column.left+(word.width-cta.offsetWidth)/2;copy.style.setProperty('--gold-cta-offset',Math.max(12-column.left,Math.min(left,window.innerWidth-12-column.left-cta.offsetWidth))+'px');}
+ align();
+ if('ResizeObserver' in window){const observer=new ResizeObserver(align);observer.observe(copy);observer.observe(cta);}else window.addEventListener('resize',align,{passive:true});
+ if(document.fonts)document.fonts.ready.then(align);
 })();
 </script></body></html>
