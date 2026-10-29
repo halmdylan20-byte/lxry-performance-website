@@ -159,11 +159,6 @@
 .hero-background-video.is-playing{opacity:1}
 .hero-fullbleed::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;background:linear-gradient(90deg,rgba(8,9,10,.48),rgba(8,9,10,.12) 66%,rgba(8,9,10,.24))}
 @media(prefers-reduced-motion:reduce){.hero-background-video{display:none;transition:none}}
-</style><style id="lxry-soft-packet-glow">
-/* Soft, fixed backlight behind the first packet; no flares or pulsing. */
-.hero .orb{background:radial-gradient(ellipse at 35% 46%,rgba(220,178,115,.18),transparent 59%),radial-gradient(ellipse at 68% 55%,rgba(141,127,207,.14),transparent 58%),radial-gradient(ellipse at 50% 50%,rgba(4,6,12,.24),transparent 52%);border-color:rgba(219,181,123,.16);animation:none}
-.hero .orb::before{border-color:rgba(207,176,130,.13) rgba(148,137,205,.12) rgba(148,137,205,.12) rgba(207,176,130,.13)}
-.hero .product-frame::after{display:none}
 </style><style id="lxry-continuous-atmosphere">
 /* One document-sized atmosphere; no fixed backgrounds or scroll transforms. */
 body{background:radial-gradient(ellipse 90% 28% at 86% 27%,#17243a38,transparent 76%),radial-gradient(ellipse 85% 30% at 12% 58%,#29203e30,transparent 76%),radial-gradient(ellipse 100% 24% at 70% 83%,#1222372e,transparent 78%),#080a0f}
@@ -197,9 +192,16 @@ footer{background:transparent}footer .footer-top{border:0}
 @media(max-width:750px){main>section{scroll-margin-top:76px}.section,.explore-section,.science-editorial,.performance-cinema,.story-editorial{padding-block:60px}.shop-grid{display:block}.performance-cinema .performance-inner{min-height:0}.story-editorial .story-copy{padding:12px 0}.story-editorial h2{font-size:clamp(38px,9vw,58px)}.science-editorial .science-headline{font-size:clamp(30px,8vw,48px)}}
 @media(max-width:650px){.performance-left{padding:22px 0}.performance-right{height:140px}.performance-footer{padding-top:16px}}
 @media(prefers-reduced-motion:reduce){.reveal,.reveal.reveal-pending{opacity:1;transform:none;transition:none}}
+</style><style id="lxry-clean-video-hero">
+/* A single text column over the existing full-width film; no viewer slot. */
+.hero{display:flex;align-items:center;min-height:760px;padding-top:110px;padding-bottom:75px}
+.hero::before,.hero::after{content:none;animation:none}
+.hero-copy{width:48%;padding-bottom:0}
+.hero-copy .ctas{justify-content:center;margin-top:24px}
+@media(max-width:750px){.hero{align-items:flex-start;justify-content:center;min-height:680px;padding-top:130px;padding-bottom:90px}.hero-copy{width:100%}.hero-copy .ctas{margin-top:22px}}
 </style></head><body>
 <header class="topbar"><div class="shell navinner"><a class="brand" href="#home" aria-label="LXRY Performance"><img src="assets/logo.png" alt="LXRY Performance"></a><nav class="navlinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#science">Science</a><a href="#story">Story</a><a href="#shop">Shop</a></nav><div class="actions"><a class="iconbtn" style="display:grid;place-items:center;text-decoration:none" href="#shop" aria-label="Shop">♧</a><button class="iconbtn menu" id="menu" aria-label="Open menu" aria-expanded="false">☰</button></div></div></header><nav class="mobile-links" id="mobilelinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#science">Science</a><a href="#story">Story</a><a href="#shop">Shop</a></nav>
-<main><section class="hero shell" id="home"><div class="hero-fullbleed" aria-hidden="true"><video class="hero-background-video" autoplay muted loop playsinline preload="metadata" disablepictureinpicture tabindex="-1" aria-hidden="true"><source src="assets/LXRY_cinematic_hero_dark_subtle_blur.mp4" type="video/mp4"></video></div><div class="hero-copy"><div class="eyebrow">LXRY Performance · Engineered Fuel</div><h1>Fuel,<br>refined to <span class="gradient">gold.</span></h1><p class="muted">Raw honey, green tea caffeine and L-theanine — engineered into one premium packet for athletes who demand more from every session.</p><div class="ctas"><a class="btn primary" href="#shop">Shop Now <span>↗</span></a><a class="btn" href="#explore">Explore the Packet <span>→</span></a></div><div class="pill-row"><div><span>ϟ</span>Energy</div><div><span>◎</span>Focus</div><div><span>◇</span>Premium ingredients</div></div></div><div class="product-theater"><div class="orb"></div><div class="product-frame"><iframe allowtransparency="true" style="background:transparent!important" id="hero-model" title="Interactive LXRY 3D product packet" src="model/index.html?hero=1" loading="eager"></iframe></div><div class="view-stack" data-target="hero-model"><button class="active" data-view="front">Front</button><button data-view="back">Back</button><button data-view="side">Side</button><button data-view="rotate">⟳ Rotate</button><button data-view="zoomIn" aria-label="Zoom in on packet">＋ Zoom</button><button data-view="zoomOut" aria-label="Zoom out on packet">－ Zoom</button><button data-view="zoomIn">＋ Zoom</button><button data-view="zoomOut">－ Zoom</button></div><div class="rotate-hint">Drag to rotate · Scroll to zoom</div></div></section>
+<main><section class="hero shell" id="home"><div class="hero-fullbleed" aria-hidden="true"><video class="hero-background-video" autoplay muted loop playsinline preload="metadata" disablepictureinpicture tabindex="-1" aria-hidden="true"><source src="assets/LXRY_cinematic_hero_dark_subtle_blur.mp4" type="video/mp4"></video></div><div class="hero-copy"><div class="eyebrow">LXRY Performance · Engineered Fuel</div><h1>Fuel,<br>refined to <span class="gradient">gold.</span></h1><div class="ctas"><a class="btn primary" href="#shop">Shop Now <span>↗</span></a></div></div></section>
 <section class="section shell explore-section" id="explore">
 
 <div class="explore luxury-explore floating-explore">
