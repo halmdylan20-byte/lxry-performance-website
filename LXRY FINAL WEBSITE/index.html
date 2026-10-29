@@ -152,6 +152,19 @@
 .product-frame,.explore-stage{isolation:isolate}
 .product-frame iframe,.explore-stage iframe{background:transparent!important;background-color:transparent!important;color-scheme:dark;border:0;display:block}
 .product-frame::before,.explore-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:transparent}
+</style><style id="lxry-hero-parallax-style">
+/* Hero-only depth; the viewer keeps ownership of its camera and materials. */
+#home.hero-parallax .product-frame{animation:none;transform:perspective(1200px) translate3d(0,var(--packet-y,0px),0) rotateX(var(--packet-rx,0deg)) rotateY(var(--packet-ry,0deg)) scale(var(--packet-scale,1));transform-origin:50% 50%;will-change:auto}
+#home.hero-parallax .product-frame::after{display:none}
+#home.hero-parallax .hero-copy{transform:translate3d(0,var(--copy-y,0px),0)}
+#home.hero-parallax .hero-fullbleed{transform:translate3d(-50%,var(--back-y,0px),0) scale(1.06)}
+#home.hero-parallax .orb{translate:0 var(--orb-y,0px)}
+#home.hero-parallax.hero-parallax-active .product-frame{will-change:transform}
+@media(prefers-reduced-motion:reduce){
+ #home.hero-parallax .product-frame,#home.hero-parallax .hero-copy{transform:none}
+ #home.hero-parallax .hero-fullbleed{transform:translateX(-50%)}
+ #home.hero-parallax .orb{translate:none}
+}
 </style></head><body>
 <header class="topbar"><div class="shell navinner"><a class="brand" href="#home" aria-label="LXRY Performance"><img src="assets/logo.png" alt="LXRY Performance"></a><nav class="navlinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#science">Science</a><a href="#story">Story</a><a href="#shop">Shop</a></nav><div class="actions"><a class="iconbtn" style="display:grid;place-items:center;text-decoration:none" href="#shop" aria-label="Shop">♧</a><button class="iconbtn menu" id="menu" aria-label="Open menu" aria-expanded="false">☰</button></div></div></header><nav class="mobile-links" id="mobilelinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#science">Science</a><a href="#story">Story</a><a href="#shop">Shop</a></nav>
 <main><section class="hero shell" id="home"><div class="hero-fullbleed" aria-hidden="true"></div><div class="hero-copy"><div class="eyebrow">LXRY Performance · Engineered Fuel</div><h1>Fuel,<br>refined to <span class="gradient">gold.</span></h1><p class="muted">Raw honey, green tea caffeine and L-theanine — engineered into one premium packet for athletes who demand more from every session.</p><div class="ctas"><a class="btn primary" href="#shop">Shop Now <span>↗</span></a><a class="btn" href="#explore">Explore the Packet <span>→</span></a></div><div class="pill-row"><div><span>ϟ</span>Energy</div><div><span>◎</span>Focus</div><div><span>◇</span>Premium ingredients</div></div></div><div class="product-theater"><div class="orb"></div><div class="product-frame"><iframe allowtransparency="true" style="background:transparent!important" id="hero-model" title="Interactive LXRY 3D product packet" src="model/index.html?hero=1" loading="eager"></iframe></div><div class="view-stack" data-target="hero-model"><button class="active" data-view="front">Front</button><button data-view="back">Back</button><button data-view="side">Side</button><button data-view="rotate">⟳ Rotate</button><button data-view="zoomIn" aria-label="Zoom in on packet">＋ Zoom</button><button data-view="zoomOut" aria-label="Zoom out on packet">－ Zoom</button><button data-view="zoomIn">＋ Zoom</button><button data-view="zoomOut">－ Zoom</button></div><div class="rotate-hint">Drag to rotate · Scroll to zoom</div></div></section><div class="hero-floor"></div>
@@ -217,4 +230,65 @@ function selectPerformance(index){perfScene=(index+themes.length)%themes.length;
 perfButtons.forEach((b,i)=>{b.addEventListener('click',()=>selectPerformance(i));b.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const next=(i+(e.key==='ArrowRight'?1:-1)+perfButtons.length)%perfButtons.length;selectPerformance(next);perfButtons[next].focus()}})});document.getElementById('perf-next').addEventListener('click',()=>selectPerformance(perfScene+1));
 document.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-p]').forEach(el=>{el.classList.toggle('active',el===b);el.querySelector('.choose').textContent=el===b?'Selected':'Select'})}));
 const menu=document.getElementById('menu'),mobile=document.getElementById('mobilelinks');menu.onclick=()=>{const open=mobile.classList.toggle('open');menu.setAttribute('aria-expanded',open);menu.textContent=open?'×':'☰'};mobile.querySelectorAll('a').forEach(a=>a.onclick=()=>{mobile.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='☰'});document.getElementById('year').textContent=new Date().getFullYear();const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(x=>io.observe(x));
-</script><script>(()=>{const c=document.querySelector('.checkout[data-dough-page]');if(!c)return;const id=c.dataset.doughPage,unit=parseFloat(c.dataset.unitPrice),out=c.querySelector('.quantity span'),dec=c.querySelector('[data-qty="-1"]'),inc=c.querySelector('[data-qty="1"]'),buy=c.querySelector('#buy-now'),total=buy.querySelector('.total');let q=1;function render(){out.textContent=q;dec.disabled=q<=1;inc.disabled=q>=100;total.textContent='$'+(unit*q).toFixed(2);const p=new URLSearchParams({quantity:String(q),back:location.href});const a=new URLSearchParams(location.search).get('affiliate')||new URLSearchParams(location.search).get('ref');if(a)p.set('affiliate',a);buy.href='https://app.dough.do/api/buy/'+encodeURIComponent(id)+'?'+p}c.querySelectorAll('[data-qty]').forEach(b=>b.addEventListener('click',()=>{q=Math.min(100,Math.max(1,q+Number(b.dataset.qty)));render()}));render()})();</script></body></html>
+</script><script>(()=>{const c=document.querySelector('.checkout[data-dough-page]');if(!c)return;const id=c.dataset.doughPage,unit=parseFloat(c.dataset.unitPrice),out=c.querySelector('.quantity span'),dec=c.querySelector('[data-qty="-1"]'),inc=c.querySelector('[data-qty="1"]'),buy=c.querySelector('#buy-now'),total=buy.querySelector('.total');let q=1;function render(){out.textContent=q;dec.disabled=q<=1;inc.disabled=q>=100;total.textContent='$'+(unit*q).toFixed(2);const p=new URLSearchParams({quantity:String(q),back:location.href});const a=new URLSearchParams(location.search).get('affiliate')||new URLSearchParams(location.search).get('ref');if(a)p.set('affiliate',a);buy.href='https://app.dough.do/api/buy/'+encodeURIComponent(id)+'?'+p}c.querySelectorAll('[data-qty]').forEach(b=>b.addEventListener('click',()=>{q=Math.min(100,Math.max(1,q+Number(b.dataset.qty)));render()}));render()})();</script><script id="lxry-hero-parallax">
+// Scroll transforms live outside the iframe: never change the model's camera,
+// geometry, lighting, or pointer/zoom handlers (including the second viewer).
+(()=>{
+ const hero=document.getElementById('home'),viewer=document.getElementById('hero-model');
+ if(!hero||!viewer)return;
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ const compact=matchMedia('(max-width: 750px)');
+ let frame=0,last=0,current=0,target=0,visible=false,held=false,releaseTimer=0;
+ let top=0,height=1;
+ const pointers=new Set();
+ const clamp=n=>Math.max(0,Math.min(1,n));
+ function measure(){const r=hero.getBoundingClientRect();top=r.top+scrollY;height=Math.max(1,r.height);}
+ function paint(){
+  const p=current,a=compact.matches?.55:1;
+  hero.style.setProperty('--packet-y',`${p*82*a}px`);
+  hero.style.setProperty('--packet-scale',String(1+p*.065*a));
+  hero.style.setProperty('--packet-rx',`${-p*4*a}deg`);
+  hero.style.setProperty('--packet-ry',`${p*7*a}deg`);
+  hero.style.setProperty('--copy-y',`${-p*22*a}px`);
+  hero.style.setProperty('--back-y',`${p*32*a}px`);
+  hero.style.setProperty('--orb-y',`${p*46*a}px`);
+ }
+ function tick(now){
+  frame=0;
+  if(!visible||reduced.matches||document.hidden||held){last=0;return;}
+  const dt=last?Math.min(64,now-last):16.67;last=now;
+  current+=(target-current)*(1-Math.exp(-dt/125));
+  if(Math.abs(target-current)<.0001)current=target;
+  paint();
+  if(current!==target)frame=requestAnimationFrame(tick);else last=0;
+ }
+ function wake(){if(!frame&&visible&&!held&&!reduced.matches&&!document.hidden)frame=requestAnimationFrame(tick);}
+ function update(){target=clamp((scrollY-top)/height);wake();}
+ function stop(){cancelAnimationFrame(frame);frame=0;last=0;}
+ function suspend(){held=true;stop();clearTimeout(releaseTimer);}
+ function resume(){if(pointers.size)return;clearTimeout(releaseTimer);releaseTimer=setTimeout(()=>{held=false;update();},180);}
+ function bindInput(doc){
+  doc.addEventListener('pointerdown',e=>{pointers.add(e.pointerId);suspend();},{passive:true,capture:true});
+  for(const type of ['pointerup','pointercancel','lostpointercapture'])doc.addEventListener(type,e=>{pointers.delete(e.pointerId);resume();},{passive:true,capture:true});
+  doc.addEventListener('wheel',()=>{suspend();resume();},{passive:true,capture:true});
+ }
+ // Same-origin iframe events do not bubble to the parent. Observe them without
+ // preventing defaults or changing touch-action, so existing gestures survive.
+ function bindViewer(){try{bindInput(viewer.contentDocument);}catch{/* A future cross-origin viewer still retains its own controls. */}}
+ viewer.addEventListener('load',()=>{pointers.clear();held=false;bindViewer();update();});
+ if(viewer.contentDocument?.readyState==='complete')bindViewer();
+ bindInput(hero);
+ window.addEventListener('pointerup',e=>{pointers.delete(e.pointerId);resume();},{passive:true});
+ window.addEventListener('blur',()=>{pointers.clear();resume();});
+ window.addEventListener('scroll',update,{passive:true});
+ window.addEventListener('resize',()=>{measure();update();},{passive:true});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden){pointers.clear();held=false;stop();}else{measure();update();}});
+ function motion(){stop();measure();target=clamp((scrollY-top)/height);current=target;paint();hero.classList.toggle('hero-parallax',!reduced.matches);wake();}
+ reduced.addEventListener('change',motion);
+ compact.addEventListener('change',()=>{measure();update();paint();});
+ const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;hero.classList.toggle('hero-parallax-active',visible&&!reduced.matches);if(visible){measure();update();}else stop();});
+ observer.observe(hero);
+ new ResizeObserver(()=>{measure();update();}).observe(hero);
+ motion();
+})();
+</script></body></html>
