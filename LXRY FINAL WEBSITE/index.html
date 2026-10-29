@@ -152,23 +152,6 @@
 .product-frame,.explore-stage{isolation:isolate}
 .product-frame iframe,.explore-stage iframe{background:transparent!important;background-color:transparent!important;color-scheme:dark;border:0;display:block}
 .product-frame::before,.explore-stage::before{content:"";position:absolute;inset:0;pointer-events:none;background:transparent}
-</style><style id="lxry-hero-parallax-style">
-/* Pin only the first hero; its original contents/layout remain intact. */
-.hero-scroll-track.is-enabled{height:calc(var(--hero-scene-height) + var(--hero-scroll-distance));position:relative}
-.hero-scroll-track.is-enabled #hero-scene{position:sticky;top:var(--hero-pin-top);margin-top:0;margin-bottom:0}
-#hero-scene.hero-parallax .product-frame{animation:none;transform:none;will-change:auto}
-#hero-scene.hero-parallax .product-frame::after{display:none}
-#hero-scene.hero-parallax::before,#hero-scene.hero-parallax::after,#hero-scene.hero-parallax .orb{animation:none}
-#hero-scene.hero-parallax .hero-copy{transform:translate3d(0,var(--copy-y,0px),0)}
-#hero-scene.hero-parallax .hero-fullbleed{transform:translate3d(-50%,var(--back-y,0px),0) scale(1.06)}
-#hero-scene.hero-parallax .orb{translate:0 var(--orb-y,0px)}
-@media(prefers-reduced-motion:reduce){
- .hero-scroll-track.is-enabled{height:auto}
- .hero-scroll-track.is-enabled #hero-scene{position:relative;top:auto}
- #hero-scene.hero-parallax .hero-copy{transform:none}
- #hero-scene.hero-parallax .hero-fullbleed{transform:translateX(-50%)}
- #hero-scene.hero-parallax .orb{translate:none}
-}
 </style><style id="lxry-hero-video-style">
 /* Decorative video stays inside the existing hero background layer. */
 .hero-fullbleed{overflow:hidden}
@@ -241,83 +224,7 @@ function selectPerformance(index){perfScene=(index+themes.length)%themes.length;
 perfButtons.forEach((b,i)=>{b.addEventListener('click',()=>selectPerformance(i));b.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const next=(i+(e.key==='ArrowRight'?1:-1)+perfButtons.length)%perfButtons.length;selectPerformance(next);perfButtons[next].focus()}})});document.getElementById('perf-next').addEventListener('click',()=>selectPerformance(perfScene+1));
 document.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-p]').forEach(el=>{el.classList.toggle('active',el===b);el.querySelector('.choose').textContent=el===b?'Selected':'Select'})}));
 const menu=document.getElementById('menu'),mobile=document.getElementById('mobilelinks');menu.onclick=()=>{const open=mobile.classList.toggle('open');menu.setAttribute('aria-expanded',open);menu.textContent=open?'×':'☰'};mobile.querySelectorAll('a').forEach(a=>a.onclick=()=>{mobile.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='☰'});document.getElementById('year').textContent=new Date().getFullYear();const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(x=>io.observe(x));
-</script><script>(()=>{const c=document.querySelector('.checkout[data-dough-page]');if(!c)return;const id=c.dataset.doughPage,unit=parseFloat(c.dataset.unitPrice),out=c.querySelector('.quantity span'),dec=c.querySelector('[data-qty="-1"]'),inc=c.querySelector('[data-qty="1"]'),buy=c.querySelector('#buy-now'),total=buy.querySelector('.total');let q=1;function render(){out.textContent=q;dec.disabled=q<=1;inc.disabled=q>=100;total.textContent='$'+(unit*q).toFixed(2);const p=new URLSearchParams({quantity:String(q),back:location.href});const a=new URLSearchParams(location.search).get('affiliate')||new URLSearchParams(location.search).get('ref');if(a)p.set('affiliate',a);buy.href='https://app.dough.do/api/buy/'+encodeURIComponent(id)+'?'+p}c.querySelectorAll('[data-qty]').forEach(b=>b.addEventListener('click',()=>{q=Math.min(100,Math.max(1,q+Number(b.dataset.qty)));render()}));render()})();</script><script id="lxry-hero-parallax">
-// The track supplies real scroll distance. The first viewer receives progress
-// and applies it to its WebGL geometry, independently of its manual camera.
-(()=>{
- const hero=document.getElementById('home'),viewer=document.getElementById('hero-model');
- if(!hero||!viewer)return;
- const track=document.createElement('div');track.className='hero-scroll-track';
- hero.before(track);track.append(hero);
- // Keep #home anchored at the track start, not the sticky element's displaced box.
- hero.id='hero-scene';track.id='home';
- const reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const compact=matchMedia('(max-width: 750px)');
- let frame=0,last=0,current=0,target=0,visible=false,held=false,releaseTimer=0;
- let start=0,distance=1;
- const pointers=new Set(),bound=new WeakSet();
- const clamp=n=>Math.max(0,Math.min(1,n));
- function measure(){
-  const height=hero.offsetHeight,pinTop=Math.min(0,innerHeight-height);
-  distance=Math.max(480,innerHeight*(compact.matches?1.15:1.35));
-  track.style.setProperty('--hero-scene-height',`${height}px`);
-  track.style.setProperty('--hero-scroll-distance',`${distance}px`);
-  track.style.setProperty('--hero-pin-top',`${pinTop}px`);
-  // Never measure the sticky hero's moving rectangle as the scroll origin.
-  start=track.getBoundingClientRect().top+scrollY-pinTop;
- }
- function send(){viewer.contentWindow?.postMessage({type:'LXRY_HERO_SCROLL',progress:reduced.matches?0:current,enabled:!reduced.matches},location.origin);}
- function paint(){
-  const a=compact.matches ? .65 : 1;
-  hero.style.setProperty('--copy-y',`${-current*28*a}px`);
-  hero.style.setProperty('--back-y',`${current*38*a}px`);
-  hero.style.setProperty('--orb-y',`${current*56*a}px`);
-  hero.dataset.scrollProgress=current.toFixed(4);send();
- }
- function stop(){cancelAnimationFrame(frame);frame=0;last=0;}
- function tick(now){
-  frame=0;
-  if(!visible||reduced.matches||document.hidden||held){last=0;return;}
-  const dt=last?Math.min(64,now-last):16.67;last=now;
-  current+=(target-current)*(1-Math.exp(-dt/100));
-  if(Math.abs(target-current)<.0001)current=target;
-  paint();
-  if(current!==target)frame=requestAnimationFrame(tick);else last=0;
- }
- function wake(){if(!frame&&visible&&!held&&!reduced.matches&&!document.hidden)frame=requestAnimationFrame(tick);}
- function update(){target=clamp((scrollY-start)/distance);wake();}
- function suspend(){held=true;stop();clearTimeout(releaseTimer);}
- function resume(){if(pointers.size)return;clearTimeout(releaseTimer);releaseTimer=setTimeout(()=>{held=false;update();},140);}
- function bindViewer(){
-  try{
-   const doc=viewer.contentDocument;if(!doc||bound.has(doc))return;bound.add(doc);
-   doc.addEventListener('pointerdown',e=>{pointers.add(e.pointerId);suspend();},{passive:true,capture:true});
-   for(const type of ['pointerup','pointercancel','lostpointercapture'])doc.addEventListener(type,e=>{pointers.delete(e.pointerId);resume();},{passive:true,capture:true});
-   // Only wheel gestures inside the model are zoom gestures. Page wheel events
-   // must keep updating scroll progress continuously, not pause the hero.
-   doc.addEventListener('wheel',()=>{suspend();resume();},{passive:true,capture:true});
-  }catch{/* Cross-origin viewers keep native controls; no event interception. */}
- }
- viewer.addEventListener('load',()=>{pointers.clear();held=false;bindViewer();send();update();});
- window.addEventListener('message',e=>{if(e.origin===location.origin&&e.source===viewer.contentWindow&&e.data?.type==='LXRY_HERO_READY'){bindViewer();send();}});
- bindViewer();
- window.addEventListener('pointerup',e=>{pointers.delete(e.pointerId);resume();},{passive:true});
- window.addEventListener('blur',()=>{pointers.clear();resume();});
- window.addEventListener('scroll',update,{passive:true});
- function resize(){measure();update();}
- window.addEventListener('resize',resize,{passive:true});
- document.addEventListener('visibilitychange',()=>{if(document.hidden){pointers.clear();held=false;stop();}else resize();});
- function motion(){
-  stop();pointers.clear();held=false;clearTimeout(releaseTimer);
-  track.classList.toggle('is-enabled',!reduced.matches);hero.classList.toggle('hero-parallax',!reduced.matches);
-  measure();target=clamp((scrollY-start)/distance);current=target;paint();wake();
- }
- reduced.addEventListener('change',motion);compact.addEventListener('change',resize);
- new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)resize();else stop();}).observe(track);
- new ResizeObserver(resize).observe(hero);
- motion();
-})();
-</script><script id="lxry-hero-video">
+</script><script>(()=>{const c=document.querySelector('.checkout[data-dough-page]');if(!c)return;const id=c.dataset.doughPage,unit=parseFloat(c.dataset.unitPrice),out=c.querySelector('.quantity span'),dec=c.querySelector('[data-qty="-1"]'),inc=c.querySelector('[data-qty="1"]'),buy=c.querySelector('#buy-now'),total=buy.querySelector('.total');let q=1;function render(){out.textContent=q;dec.disabled=q<=1;inc.disabled=q>=100;total.textContent='$'+(unit*q).toFixed(2);const p=new URLSearchParams({quantity:String(q),back:location.href});const a=new URLSearchParams(location.search).get('affiliate')||new URLSearchParams(location.search).get('ref');if(a)p.set('affiliate',a);buy.href='https://app.dough.do/api/buy/'+encodeURIComponent(id)+'?'+p}c.querySelectorAll('[data-qty]').forEach(b=>b.addEventListener('click',()=>{q=Math.min(100,Math.max(1,q+Number(b.dataset.qty)));render()}));render()})();</script><script id="lxry-hero-video">
 // Decorative background only: no changes to packet controls or scroll logic.
 (()=>{
  const video=document.querySelector('.hero-background-video');if(!video)return;

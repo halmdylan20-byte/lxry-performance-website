@@ -49,23 +49,12 @@ for(const side of [1,-1]){
 const isHero=new URLSearchParams(location.search).get('hero')==='1';
 const reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let interacted=false;
-// Additive cinematic offsets apply only to the first hero instance.
-let heroProgress=0,heroScrollEnabled=false;
-if(isHero)canvas.style.touchAction='pan-y'; // vertical swipes scroll; horizontal drags rotate
-window.addEventListener('message',event=>{
- if(!isHero||event.source!==parent||event.origin!==location.origin||event.data?.type!=='LXRY_HERO_SCROLL')return;
- const p=event.data.progress;if(typeof p!=='number'||!Number.isFinite(p))return;
- const enabled=event.data.enabled===true&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- if(pointers.size&&enabled)return;
- heroScrollEnabled=enabled;heroProgress=enabled?Math.max(0,Math.min(1,p)):0;
- // Stop the old time-driven hero spin; scroll now owns the cinematic offset.
- spin=false;updateSpin();schedule();
-});
-if(isHero)parent.postMessage({type:'LXRY_HERO_READY'},location.origin);
+// Keep vertical touch scrolling available in the hero; horizontal drags still rotate.
+if(isHero)canvas.style.touchAction='pan-y';
 let panX=0,panY=0,angle=-.26,tilt=-.035,zoom=1,spin=isHero&&!reduceMotion,ready=0,frame=0,last=0,w=1,h=1;
-function render(){frame=0;if(ready<2)return;gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform2f(uniforms.rotation,angle+heroProgress*.9,tilt-heroProgress*.12);gl.uniform2f(uniforms.viewport,w,h);gl.uniform1f(uniforms.scale,zoom*(heroScrollEnabled?.82+heroProgress*.14:1));gl.uniform2f(uniforms.pan,panX,panY+(heroScrollEnabled?h*(.06-.06*heroProgress):0));
+function render(){frame=0;if(ready<2)return;gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform2f(uniforms.rotation,angle,tilt);gl.uniform2f(uniforms.viewport,w,h);gl.uniform1f(uniforms.scale,zoom);gl.uniform2f(uniforms.pan,panX,panY);
  for(const face of faces){gl.bindBuffer(gl.ARRAY_BUFFER,face.buffer);for(const [name,size,offset] of [['position',3,0],['normal',3,12],['uv',2,24]]){gl.enableVertexAttribArray(attributes[name]);gl.vertexAttribPointer(attributes[name],size,gl.FLOAT,false,32,offset)}gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,face.index);gl.bindTexture(gl.TEXTURE_2D,face.texture);gl.drawElements(gl.TRIANGLES,face.count,gl.UNSIGNED_SHORT,0)}
- root.dataset.rendered='gpu';if(isHero)root.dataset.heroScrollProgress=String(heroProgress);
+ root.dataset.rendered='gpu';
 }
 function schedule(){if(!frame)frame=requestAnimationFrame(render)}
 function resize(){w=canvas.clientWidth;h=canvas.clientHeight;const dpr=Math.min(devicePixelRatio||1,3,3840/Math.max(w,h));if(w<1||h<1)return;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);schedule()}
