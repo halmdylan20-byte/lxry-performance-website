@@ -198,6 +198,11 @@ footer{background:transparent}footer .footer-top{border:0}
 @media(max-width:1050px) and (min-width:751px){.comparison-content{grid-template-columns:1fr;gap:28px}.comparison-details{min-height:235px}.comparison-photo,.comparison-pending{min-height:320px}.comparison-photo img{height:310px}}
 @media(max-width:750px){.comparison-grid{grid-template-columns:1fr;gap:36px}.comparison-title{font-size:clamp(48px,13vw,92px);margin-bottom:48px}.comparison-divider{flex-direction:row;padding:0;gap:18px}.comparison-divider::before,.comparison-divider::after{height:1px;width:auto;background:linear-gradient(90deg,transparent,#ffffff20)}.comparison-divider::after{background:linear-gradient(90deg,#ffffff20,transparent)}.comparison-content{gap:18px;min-height:270px}.comparison-photo,.comparison-pending{min-height:270px}.comparison-photo img{height:265px}.comparison-brand{margin-bottom:20px}.comparison-brand h3{font-size:24px}.comparison-details li{font-size:12px;gap:8px}.comparison-details ul{gap:16px}.comparison-pending{padding:8px}.comparison-details h4{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.comparison .reveal{transition:none;transition-delay:0s}}
+</style><style id="lxry-auto-hide-header">
+.topbar{transition:transform 300ms cubic-bezier(.22,.61,.36,1)}
+.topbar.nav-scroll-hidden{transform:translateY(-100%);pointer-events:none}
+@media(prefers-reduced-motion:reduce){.topbar{transition:none}}
+.comparison-c4-photo img{filter:brightness(.94) contrast(1.025) drop-shadow(0 12px 14px #0008)}
 </style></head><body>
 <header class="topbar"><div class="shell navinner"><a class="brand" href="#home" aria-label="LXRY Performance"><img src="assets/logo.png" alt="LXRY Performance"></a><nav class="navlinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#science">Science</a><a href="#story">Story</a><a href="#shop">Shop</a></nav><div class="actions"><a class="iconbtn" style="display:grid;place-items:center;text-decoration:none" href="#shop" aria-label="Shop">♧</a><button class="iconbtn menu" id="menu" aria-label="Open menu" aria-expanded="false">☰</button></div></div></header><nav class="mobile-links" id="mobilelinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#science">Science</a><a href="#story">Story</a><a href="#shop">Shop</a></nav>
 <main><section class="hero shell" id="home"><div class="hero-fullbleed" aria-hidden="true"><video class="hero-background-video" autoplay muted loop playsinline preload="metadata" disablepictureinpicture tabindex="-1" aria-hidden="true"><source src="assets/LXRY_cinematic_hero_dark_subtle_blur.mp4" type="video/mp4"></video></div><div class="hero-copy"><div class="eyebrow">LXRY Performance · Engineered Fuel</div><h1>Fuel,<br>refined to <span class="gradient">gold.</span></h1><div class="ctas"><a class="btn primary" href="#shop">Shop Now <span>↗</span></a></div></div></section>
@@ -235,7 +240,7 @@ footer{background:transparent}footer .footer-top{border:0}
    <article class="comparison-side comparison-c4" aria-labelledby="comparison-c4-title">
     <header class="comparison-brand"><h3 id="comparison-c4-title">C4</h3><p>Performance Energy · STARBURST Strawberry · 16 fl oz</p></header>
     <div class="comparison-content">
-     <figure class="comparison-photo comparison-c4-photo reveal"><img src="assets/c4-starburst-strawberry.png" alt="C4 Performance Energy STARBURST Strawberry, 16 fl oz can" loading="lazy" decoding="async"></figure>
+     <figure class="comparison-photo comparison-c4-photo reveal"><img src="assets/c4-starburst-strawberry-cutout.png" alt="C4 Performance Energy STARBURST Strawberry, 16 fl oz can" loading="lazy" decoding="async"></figure>
      <div class="comparison-details comparison-c4-details reveal"><h4>Listed ingredients.</h4><p>Carbonated water, CarnoSyn® beta-alanine, L-citrulline, malic acid, BetaPower® betaine anhydrous, citric acid, natural flavors, potassium sorbate (preservative), caffeine anhydrous, sucralose, acesulfame potassium, niacinamide, N-acetyl-L-tyrosine, cyanocobalamin (vitamin B12).</p><a class="comparison-source" href="https://www.nsfsport.com/certified-products/listing-detail.php?id=1589040" target="_blank" rel="noopener noreferrer">View product label ↗</a><p class="comparison-note">Source: label in NSF’s product listing for this 16 fl oz variant. Formulations may change; check your can.</p></div>
     </div>
    </article>
@@ -294,5 +299,32 @@ const menu=document.getElementById('menu'),mobile=document.getElementById('mobil
  align();
  if('ResizeObserver' in window){const observer=new ResizeObserver(align);observer.observe(copy);observer.observe(cta);}else window.addEventListener('resize',align,{passive:true});
  if(document.fonts)document.fonts.ready.then(align);
+})();
+</script><script id="lxry-auto-hide-header-controller">
+(()=>{
+ const header=document.querySelector('.topbar'),menu=document.getElementById('mobilelinks');
+ if(!header)return;
+ let lastY=position(),distance=0,direction=0,queued=false;
+ function position(){return Math.max(0,Math.min(window.scrollY,Math.max(0,document.documentElement.scrollHeight-window.innerHeight)));}
+ function show(){header.classList.remove('nav-scroll-hidden');distance=0;direction=0;lastY=position();}
+ function update(){
+  queued=false;
+  const y=position(),delta=y-lastY;lastY=y;
+  const active=document.activeElement;
+  const focused=active&&header.contains(active)&&active.matches(':focus-visible');
+  if(y<=80||menu?.classList.contains('open')||focused){show();return;}
+  if(!delta)return;
+  const next=delta>0?1:-1;
+  if(next!==direction){distance=0;direction=next;}
+  distance+=Math.abs(delta);
+  if(next<0&&distance>=12){header.classList.remove('nav-scroll-hidden');distance=0;}
+  else if(next>0&&distance>=20&&y>header.offsetHeight+20){header.classList.add('nav-scroll-hidden');distance=0;}
+ }
+ window.addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(update);}},{passive:true});
+ header.addEventListener('focusin',show);
+ document.addEventListener('keydown',e=>{if(e.key==='Tab')show();},true);
+ window.addEventListener('hashchange',show);
+ window.addEventListener('pageshow',show);
+ if(menu)new MutationObserver(()=>{if(menu.classList.contains('open'))show();}).observe(menu,{attributes:true,attributeFilter:['class']});
 })();
 </script></body></html>
