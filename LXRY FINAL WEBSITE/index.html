@@ -238,6 +238,21 @@ body{overflow-x:clip}
 @media(max-width:1200px) and (min-width:821px){.floating-explore{grid-template-columns:minmax(280px,1fr) minmax(380px,1.2fr);gap:24px}.luxury-explore .ingredient-panel{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:18px 34px;min-height:0}.panel-topline{grid-column:1/-1}.luxury-explore .facts{margin-top:0}.explore-lead h2{font-size:clamp(48px,5.5vw,66px)}}
 @media(max-width:820px){.floating-explore{display:flex;flex-direction:column;gap:26px}.explore-intro{align-self:stretch}.explore-lead h2{font-size:clamp(46px,7.5vw,62px);max-width:580px}.system-break{display:block}.ingredient-research{justify-content:flex-start;margin-top:22px}.explore-section{padding-bottom:36px}.comparison.section{padding-top:36px}}
 @media(max-width:390px){.comparison-heading .comparison-title{font-size:clamp(43px,13.3vw,52px)}}
+</style><style id="lxry-site-motion">
+/* Entrances use transient Web Animations; content remains visible without JS. */
+.navlinks a,footer nav a{position:relative}
+.navlinks a::after,footer nav a::after{content:'';position:absolute;left:0;right:0;bottom:-7px;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .28s ease;pointer-events:none}
+.navlinks a:hover::after,.navlinks a:focus-visible::after,footer nav a:hover::after,footer nav a:focus-visible::after{transform:scaleX(1)}
+.iconbtn{transition:border-color .28s,background-color .28s}
+.iconbtn:hover{border-color:var(--gold);background-color:#edc98e0d}
+.comparison-photo img,.shop-product img{animation:lxryProductBreath 7.5s ease-in-out infinite;animation-play-state:paused}
+.comparison-c4-photo img{animation-delay:-2.6s}
+.shop-product img{animation-delay:-1.4s}
+.motion-running{animation-play-state:running!important}
+@keyframes lxryProductBreath{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media(hover:hover) and (pointer:fine){.comparison-photo:hover img,.shop-product:hover img{animation-play-state:paused!important}}
+@media(max-width:820px){@keyframes lxryProductBreath{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}}
+@media(prefers-reduced-motion:reduce){.comparison-photo img,.shop-product img{animation:none!important;transform:none}.navlinks a::after,footer nav a::after{transition:none}}
 </style></head><body>
 <header class="topbar"><div class="shell navinner"><a class="brand" href="#home" aria-label="LXRY Performance"><img src="assets/logo.png" alt="LXRY Performance"></a><nav class="navlinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#research">Research</a><a href="#story">Story</a><a href="#shop">Shop</a></nav><div class="actions"><a class="iconbtn" style="display:grid;place-items:center;text-decoration:none" href="#shop" aria-label="Shop">♧</a><button class="iconbtn menu" id="menu" aria-label="Open menu" aria-expanded="false">☰</button></div></div></header><nav class="mobile-links" id="mobilelinks"><a href="#explore">Explore</a><a href="#ingredients">Ingredients</a><a href="#performance">Performance</a><a href="#research">Research</a><a href="#story">Story</a><a href="#shop">Shop</a></nav>
 <main id="cinematic-page"><div class="hero-scene" id="home"><section class="hero shell"><div class="hero-fullbleed" aria-hidden="true"><video class="hero-background-video" autoplay muted loop playsinline preload="metadata" disablepictureinpicture tabindex="-1" aria-hidden="true"><source src="assets/LXRY_cinematic_hero_dark_subtle_blur.mp4" type="video/mp4"></video></div><div class="hero-copy"><div class="eyebrow">LXRY Performance · Engineered Fuel</div><h1>Fuel,<br>refined to <span class="gradient">gold.</span></h1><div class="ctas"><a class="btn primary" href="#shop">Shop Now <span>↗</span></a></div></div></section></div><div class="page-sections"><div class="scroll-layer"><section class="section shell explore-section" id="explore">
@@ -283,7 +298,7 @@ const ingredients=[{icon:'RH',badge:'Foundational fuel',name:'Raw Honey',what:'H
 const ingredientPanelMain=document.querySelector('.ingredient-panel-main');function applyIngredient(n){const i=ingredients[n];document.getElementById('ig-count').textContent=String(n+1).padStart(2,'0')+' / 05';document.getElementById('ig-symbol').textContent=i.icon;document.getElementById('ig-badge').textContent=i.badge;document.getElementById('ig-name').textContent=i.name;document.getElementById('ig-what').textContent=i.what;document.getElementById('ig-purpose').textContent=i.purpose;document.getElementById('ig-why').textContent=i.why;document.querySelectorAll('.hotspot').forEach(e=>e.classList.toggle('on',Number(e.dataset.i)===n))}function selectIngredient(n){ingredientPanelMain.classList.add('switching');setTimeout(()=>{applyIngredient(n);ingredientPanelMain.classList.remove('switching')},110)}applyIngredient(0);document.querySelectorAll('.hotspot').forEach(b=>b.addEventListener('click',()=>selectIngredient(Number(b.dataset.i))));
 document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{const f=document.getElementById(b.closest('[data-target]').dataset.target);if(f.contentWindow)f.contentWindow.postMessage({type:'LXRY_VIEW',view:b.dataset.view},location.origin);if(['front','back','side'].includes(b.dataset.view)){b.parentNode.querySelectorAll('button').forEach(el=>el.classList.toggle('active',el===b))}}));
 document.querySelectorAll('[data-p]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-p]').forEach(el=>{el.classList.toggle('active',el===b);el.querySelector('.choose').textContent=el===b?'Selected':'Select'})}));
-const menu=document.getElementById('menu'),mobile=document.getElementById('mobilelinks');menu.onclick=()=>{const open=mobile.classList.toggle('open');menu.setAttribute('aria-expanded',open);menu.textContent=open?'×':'☰'};mobile.querySelectorAll('a').forEach(a=>a.onclick=()=>{mobile.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='☰'});document.getElementById('year').textContent=new Date().getFullYear();if('IntersectionObserver' in window&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');e.target.classList.remove('reveal-pending');io.unobserve(e.target)}}),{threshold:0,rootMargin:'0px 0px 24px 0px'});document.querySelectorAll('.reveal').forEach(x=>{if(x.getBoundingClientRect().top>window.innerHeight){x.classList.add('reveal-pending');io.observe(x)}});}
+const menu=document.getElementById('menu'),mobile=document.getElementById('mobilelinks');menu.onclick=()=>{const open=mobile.classList.toggle('open');menu.setAttribute('aria-expanded',open);menu.textContent=open?'×':'☰'};mobile.querySelectorAll('a').forEach(a=>a.onclick=()=>{mobile.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='☰'});document.getElementById('year').textContent=new Date().getFullYear();
 </script><script>(()=>{const c=document.querySelector('.checkout[data-dough-page]');if(!c)return;const id=c.dataset.doughPage,unit=parseFloat(c.dataset.unitPrice),out=c.querySelector('.quantity span'),dec=c.querySelector('[data-qty="-1"]'),inc=c.querySelector('[data-qty="1"]'),buy=c.querySelector('#buy-now'),total=buy.querySelector('.total');let q=1;function render(){out.textContent=q;dec.disabled=q<=1;inc.disabled=q>=100;total.textContent='$'+(unit*q).toFixed(2);const p=new URLSearchParams({quantity:String(q),back:location.href});const a=new URLSearchParams(location.search).get('affiliate')||new URLSearchParams(location.search).get('ref');if(a)p.set('affiliate',a);buy.href='https://app.dough.do/api/buy/'+encodeURIComponent(id)+'?'+p}c.querySelectorAll('[data-qty]').forEach(b=>b.addEventListener('click',()=>{q=Math.min(100,Math.max(1,q+Number(b.dataset.qty)));render()}));render()})();</script><script id="lxry-hero-video">
 // Decorative background only: no changes to packet controls or scroll logic.
 (()=>{
@@ -348,5 +363,37 @@ const menu=document.getElementById('menu'),mobile=document.getElementById('mobil
  if('ResizeObserver' in window)new ResizeObserver(measure).observe(hero);
  if(document.fonts)document.fonts.ready.then(measure);
  measure();
+})();
+</script><script id="lxry-site-motion-controller">
+(()=>{
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ if(!('IntersectionObserver' in window)||!Element.prototype.animate)return;
+ const targets=[...document.querySelectorAll('.hero-copy>.eyebrow,.hero-copy>h1,.hero-copy>.ctas,.explore-intro,.ingredient-panel,.ingredient-research,.comparison-heading,.comparison-side>header,.comparison-photo,.comparison-details,.shop-product,.shop-right>h2,.shop-right>.muted,.packs,.checkout,.checkout-note,.story-copy>h2,.story-copy>.muted,footer .footer-top')];
+ const products=[...document.querySelectorAll('.comparison-photo img,.shop-product img')];
+ const seen=new WeakSet(),active=new Map(),inView=new Set();
+ let entranceObserver,ambientObserver;
+ function cancelEntrances(){active.forEach(a=>a.cancel());active.clear();}
+ function syncAmbient(){products.forEach(el=>el.classList.toggle('motion-running',!reduced.matches&&!document.hidden&&inView.has(el)));}
+ function reveal(el,index){
+  if(seen.has(el))return;seen.add(el);
+  // Do not move a control while someone is using it, or hide focus on anchor entry.
+  if(el.contains(document.activeElement))return;
+  const distance=innerWidth<=820?14:26;
+  const a=el.animate([{opacity:.25,transform:'translateY('+distance+'px)'},{opacity:1,transform:'translateY(0)'}],{duration:720,delay:Math.min(index*55,165),easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'});
+  active.set(el,a);a.onfinish=()=>{active.delete(el);a.cancel();};
+ }
+ function configure(){
+  entranceObserver?.disconnect();ambientObserver?.disconnect();cancelEntrances();inView.clear();syncAmbient();
+  if(reduced.matches)return;
+  entranceObserver=new IntersectionObserver(entries=>{
+   entries.filter(e=>e.isIntersecting).forEach((e,i)=>{reveal(e.target,i);entranceObserver.unobserve(e.target);});
+  },{threshold:0,rootMargin:'0px 0px -36px 0px'});
+  targets.forEach(el=>{if(!seen.has(el))entranceObserver.observe(el);});
+  ambientObserver=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)inView.add(e.target);else inView.delete(e.target);});syncAmbient();});
+  products.forEach(el=>ambientObserver.observe(el));
+ }
+ document.addEventListener('focusin',event=>{active.forEach((a,el)=>{if(el.contains(event.target)){a.cancel();active.delete(el);}});});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)cancelEntrances();syncAmbient();});
+ reduced.addEventListener('change',configure);configure();
 })();
 </script></body></html>
